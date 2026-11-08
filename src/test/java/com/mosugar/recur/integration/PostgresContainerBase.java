@@ -25,7 +25,11 @@ public abstract class PostgresContainerBase {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
-        // JWT secret is required by app context even in repo tests
+        // @DataJpaTest is a slice — Flyway is not in the context.
+        // Let Hibernate build the schema from entities instead.
+        registry.add("spring.flyway.enabled", () -> "false");
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
+        // JWT secret is required by SecurityConfig even in slice tests
         registry.add("app.jwt.secret",
                 () -> "test-secret-key-for-testing-only-must-be-long-enough-for-hs256");
     }
