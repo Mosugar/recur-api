@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: recur-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-recur}
+      POSTGRES_USER: ${DB_USER:-recur}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-recur}
+    volumes:
+      - recur_pgdata:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-recur} -d ${DB_NAME:-recur}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build: .
+    container_name: recur-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-recur}
+      DB_USER: ${DB_USER:-recur}
+      DB_PASSWORD: ${DB_PASSWORD:-recur}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      SERVER_PORT: 8080
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    restart: on-failure
+
+volumes:
+  recur_pgdata:
