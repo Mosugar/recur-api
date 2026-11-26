@@ -1,5 +1,10 @@
 # Recur API
 
+[![CI](https://github.com/Mosugar/recur-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Mosugar/recur-api/actions/workflows/ci.yml)
+![Java 21](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
+![Spring Boot 4](https://img.shields.io/badge/Spring_Boot-4-6DB33F?logo=springboot&logoColor=white)
+![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)
+
 REST backend for **[Recur](https://github.com/Mosugar/recur)** — a minimalist subscription tracker mobile app built with Expo / React Native.
 
 ## Features
@@ -74,39 +79,43 @@ cp .env.example .env
 # 2. Start everything
 docker compose up --build
 
-# 3. Open Swagger UI
+# 3. Check that the API is up, then open Swagger UI
+curl http://localhost:8080/actuator/health   # → {"status":"UP"}
 open http://localhost:8080/swagger-ui.html
 ```
 
 > `docker compose up` starts PostgreSQL first (with a healthcheck), then the API.
-> Flyway runs migrations automatically on startup.
+> Flyway runs migrations automatically on startup. CI runs this exact flow on every pull request.
+
+```bash
+docker compose down      # stop (data is kept in the recur_pgdata volume)
+docker compose down -v   # stop and wipe the database
+```
 
 ### Running locally (no Docker)
 
-**Prerequisites:** Java 21, Maven, a running PostgreSQL instance.
+**Prerequisites:** Java 21 and a running PostgreSQL instance (Maven is provided by `./mvnw`).
 
 ```bash
-# 1. Create the database
-psql -U postgres -c "CREATE DATABASE recur; CREATE USER recur WITH PASSWORD 'recur'; GRANT ALL ON DATABASE recur TO recur;"
+# 1. Create the user and the database used by the dev profile (recur_dev, owned by recur
+#    so that Flyway can create the tables — required since PostgreSQL 15)
+psql -U postgres -c "CREATE USER recur WITH PASSWORD 'recur';"
+psql -U postgres -c "CREATE DATABASE recur_dev OWNER recur;"
 
-# 2. Set environment variables (or use the dev profile which has defaults)
-export JWT_SECRET="dev-secret-key-change-in-production-must-be-long-enough-for-hs256"
-
-# 3. Run with the dev profile
+# 2. Run with the dev profile (its database URL, credentials and JWT secret are preset
+#    in application.yml, so no environment variable is needed)
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 ## Running tests
 
 ```bash
-# All tests (requires Docker for Testcontainers integration tests)
+# All tests (requires Docker for Testcontainers integration tests),
+# also writes the JaCoCo coverage report to target/site/jacoco/index.html
 ./mvnw verify
 
 # Unit tests only (no Docker needed)
 ./mvnw test -Dtest="!RepositoryIntegrationTest"
-
-# Generate JaCoCo coverage report (target/site/jacoco/index.html)
-./mvnw verify
 ```
 
 ## API reference
@@ -209,7 +218,15 @@ curl -s -X POST http://localhost:8080/api/v1/sync \
 | `DB_PORT` | No | `5432` | PostgreSQL port |
 | `DB_NAME` | No | `recur` | Database name |
 | `DB_USER` | No | `recur` | Database user |
-| `DB_PASSWORD` | Yes | — | Database password |
+| `DB_PASSWORD` | No | `recur` | Database password — **set your own outside local development** |
 | `SERVER_PORT` | No | `8080` | HTTP port |
 
-See [`.env.example`](.env.example) for a template.
+See [`.env.example`](.env.example) for a template. With Docker Compose, `DB_HOST` and `DB_PORT` are set by `docker-compose.yml` (the API reaches the `postgres` service), and `DB_PORT` in `.env` only changes the port published on your machine.
+
+## Author
+
+**Mohamed Sekkar**, Full Stack Developer
+
+- Portfolio: [mohamedsekkar.com](https://www.mohamedsekkar.com)
+- LinkedIn: [linkedin.com/in/mohamedsekkar](https://www.linkedin.com/in/mohamedsekkar)
+- Email: mohamedsekkar1110@gmail.com
