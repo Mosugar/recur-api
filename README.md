@@ -79,12 +79,18 @@ cp .env.example .env
 # 2. Start everything
 docker compose up --build
 
-# 3. Open Swagger UI
+# 3. Check that the API is up, then open Swagger UI
+curl http://localhost:8080/actuator/health   # → {"status":"UP"}
 open http://localhost:8080/swagger-ui.html
 ```
 
 > `docker compose up` starts PostgreSQL first (with a healthcheck), then the API.
-> Flyway runs migrations automatically on startup.
+> Flyway runs migrations automatically on startup. CI runs this exact flow on every pull request.
+
+```bash
+docker compose down      # stop (data is kept in the recur_pgdata volume)
+docker compose down -v   # stop and wipe the database
+```
 
 ### Running locally (no Docker)
 
