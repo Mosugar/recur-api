@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation de l'API
+    url: https://github.com/Mosugar/recur-api#api-reference
+    about: Endpoints, exemples curl et variables d'environnement.

@@ -1,0 +1,45 @@
+name: Bug
+description: Un endpoint ne se comporte pas comme prévu
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "⚠️ Ne collez jamais de jeton JWT, de mot de passe ni le contenu de votre `.env`."
+  - type: input
+    id: endpoint
+    attributes:
+      label: Endpoint
+      placeholder: "GET /api/v1/subscriptions?sort=nextPayment"
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Requête
+      description: Corps et paramètres envoyés (sans l'en-tête Authorization).
+      render: shell
+  - type: textarea
+    id: actual
+    attributes:
+      label: Résultat obtenu
+      description: Code HTTP et corps de la réponse, ou extrait des logs.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Résultat attendu
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Lancement
+      options: [docker compose, Local (profil dev), Autre]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit ou version
+      placeholder: "main @ abc1234"
