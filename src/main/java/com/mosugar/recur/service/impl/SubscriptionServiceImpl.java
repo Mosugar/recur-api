@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +52,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             results = subscriptionRepository.findAllByUserId(userId, jpaSort);
         }
 
-        return results.stream().map(subscriptionMapper::toResponse).toList();
+        List<SubscriptionResponse> responses =
+                results.stream().map(subscriptionMapper::toResponse).toList();
+
+        // The next payment date is derived, not stored: it can only be sorted in memory.
+        // The stable sort keeps the database order (by name) for equal dates.
+        if ("nextPayment".equals(sort)) {
+            return responses.stream()
+                    .sorted(Comparator.comparing(SubscriptionResponse::nextPaymentDate))
+                    .toList();
+        }
+        return responses;
     }
 
     @Override
@@ -92,7 +103,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (sort == null) return Sort.by("name");
         return switch (sort) {
             case "price"       -> Sort.by(Sort.Direction.DESC, "priceCents");
-            case "nextPayment" -> Sort.by("firstPaymentDate");
             default            -> Sort.by("name");
         };
     }
