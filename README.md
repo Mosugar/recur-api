@@ -1,5 +1,10 @@
 # Recur API
 
+[![CI](https://github.com/Mosugar/recur-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Mosugar/recur-api/actions/workflows/ci.yml)
+![Java 21](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
+![Spring Boot 4](https://img.shields.io/badge/Spring_Boot-4-6DB33F?logo=springboot&logoColor=white)
+![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)
+
 REST backend for **[Recur](https://github.com/Mosugar/recur)** — a minimalist subscription tracker mobile app built with Expo / React Native.
 
 ## Features
