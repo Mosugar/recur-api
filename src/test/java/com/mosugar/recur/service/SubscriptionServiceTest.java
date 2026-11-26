@@ -100,6 +100,31 @@ class SubscriptionServiceTest {
         verify(subscriptionRepository).findAllByUserId(USER_ID, BY_NAME);
     }
 
+    @Test
+    void list_sortsByNextPaymentDateNotByFirstPaymentDate() {
+        LocalDate today = LocalDate.now();
+        // Database order is by name; first payment dates are in the opposite order of the next ones
+        Subscription apple = yearly("Apple", today.plusDays(10));                    // next: +10 days
+        Subscription figma = yearly("Figma", today.minusYears(3).plusDays(20));      // next: ~+20 days
+        Subscription netflix = yearly("Netflix", today.minusYears(6).plusDays(1));   // next: ~+1 day
+        Subscription zed = yearly("Zed", today.plusDays(10));                        // next: +10 days
+        when(subscriptionRepository.findAllByUserId(USER_ID, BY_NAME))
+                .thenReturn(List.of(apple, figma, netflix, zed));
+
+        List<SubscriptionResponse> result = service.list(USER_ID, null, null, "nextPayment");
+
+        // Soonest first; equal dates keep the name order
+        assertThat(result).extracting(SubscriptionResponse::name)
+                .containsExactly("Netflix", "Apple", "Zed", "Figma");
+    }
+
+    private Subscription yearly(String name, LocalDate firstPaymentDate) {
+        return Subscription.builder()
+                .id(UUID.randomUUID()).user(user)
+                .name(name).priceCents(1000).cycle(BillingCycle.YEARLY)
+                .firstPaymentDate(firstPaymentDate).build();
+    }
+
     // ── getById ──────────────────────────────────────────────────────────────
 
     @Test
