@@ -155,6 +155,8 @@ curl -s -X POST http://localhost:8080/api/v1/subscriptions \
 # List (with filters)
 curl -s "http://localhost:8080/api/v1/subscriptions?active=true&sort=price" \
   -H "Authorization: Bearer $TOKEN"
+# Filters: active=true|false, category=STREAMING|MUSIC|…
+# sort=name (default, A→Z) | price (most expensive first) | nextPayment (soonest due first)
 
 # Upcoming payments in the next 30 days
 curl -s "http://localhost:8080/api/v1/subscriptions/upcoming?days=30" \
