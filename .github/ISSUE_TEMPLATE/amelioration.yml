@@ -1,0 +1,34 @@
+name: Amélioration
+description: Proposer un nouvel endpoint ou une amélioration
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problème
+      description: Ce qui manque ou pourrait être mieux, et pour qui (app mobile, autre client).
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+    validations:
+      required: true
+  - type: dropdown
+    id: contract
+    attributes:
+      label: Impact sur le contrat de l'API
+      options:
+        - Aucun (interne)
+        - Ajout compatible (nouvel endpoint ou champ)
+        - Changement incompatible (version d'API à prévoir)
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - [ ] …
+        - [ ] Tests unitaires et/ou d'intégration
