@@ -224,3 +224,11 @@ curl -s -X POST http://localhost:8080/api/v1/sync \
 | `SERVER_PORT` | No | `8080` | HTTP port |
 
 See [`.env.example`](.env.example) for a template. With Docker Compose, `DB_HOST` and `DB_PORT` are set by `docker-compose.yml` (the API reaches the `postgres` service), and `DB_PORT` in `.env` only changes the port published on your machine.
+
+## Author
+
+**Mohamed Sekkar**, Full Stack Developer
+
+- Portfolio: [mohamedsekkar.com](https://www.mohamedsekkar.com)
+- LinkedIn: [linkedin.com/in/mohamedsekkar](https://www.linkedin.com/in/mohamedsekkar)
+- Email: mohamedsekkar1110@gmail.com
