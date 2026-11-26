@@ -94,16 +94,16 @@ docker compose down -v   # stop and wipe the database
 
 ### Running locally (no Docker)
 
-**Prerequisites:** Java 21, Maven, a running PostgreSQL instance.
+**Prerequisites:** Java 21 and a running PostgreSQL instance (Maven is provided by `./mvnw`).
 
 ```bash
-# 1. Create the database
-psql -U postgres -c "CREATE DATABASE recur; CREATE USER recur WITH PASSWORD 'recur'; GRANT ALL ON DATABASE recur TO recur;"
+# 1. Create the user and the database used by the dev profile (recur_dev, owned by recur
+#    so that Flyway can create the tables — required since PostgreSQL 15)
+psql -U postgres -c "CREATE USER recur WITH PASSWORD 'recur';"
+psql -U postgres -c "CREATE DATABASE recur_dev OWNER recur;"
 
-# 2. Set environment variables (or use the dev profile which has defaults)
-export JWT_SECRET="dev-secret-key-change-in-production-must-be-long-enough-for-hs256"
-
-# 3. Run with the dev profile
+# 2. Run with the dev profile (its database URL, credentials and JWT secret are preset
+#    in application.yml, so no environment variable is needed)
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
