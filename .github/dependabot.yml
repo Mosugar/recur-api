@@ -23,6 +23,11 @@ updates:
       timezone: Europe/Paris
     commit-message:
       prefix: "docker"
+    ignore:
+      # Changing the Java version is a deliberate upgrade (pom.xml, CI and both Dockerfile
+      # stages together), not an automatic image bump. Updates within Java 21 still apply.
+      - dependency-name: "eclipse-temurin"
+        update-types: ["version-update:semver-major"]
 
   # postgres image of docker-compose.yml
   - package-ecosystem: docker-compose
