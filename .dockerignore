@@ -1,0 +1,34 @@
+# Only mvnw, .mvn/, pom.xml and src/ are needed to build the image (see Dockerfile).
+
+# Secrets: never part of the build context
+.env
+.env.*
+!.env.example
+
+# Build output and local caches
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Git, CI and docs
+.git/
+.gitattributes
+.gitignore
+.github/
+*.md
+LICENSE
+
+# Docker files themselves
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# IDE and OS
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.DS_Store
+Thumbs.db
