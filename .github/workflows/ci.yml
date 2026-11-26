@@ -30,7 +30,7 @@ jobs:
       # setup-java only caches ~/.m2/repository; the Maven distribution downloaded by
       # ./mvnw lives in ~/.m2/wrapper and was fetched again (and sometimes failed) on every run
       - name: Cache Maven wrapper distribution
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/wrapper
           key: maven-wrapper-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties') }}
