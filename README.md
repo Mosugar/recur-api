@@ -110,14 +110,12 @@ psql -U postgres -c "CREATE DATABASE recur_dev OWNER recur;"
 ## Running tests
 
 ```bash
-# All tests (requires Docker for Testcontainers integration tests)
+# All tests (requires Docker for Testcontainers integration tests),
+# also writes the JaCoCo coverage report to target/site/jacoco/index.html
 ./mvnw verify
 
 # Unit tests only (no Docker needed)
 ./mvnw test -Dtest="!RepositoryIntegrationTest"
-
-# Generate JaCoCo coverage report (target/site/jacoco/index.html)
-./mvnw verify
 ```
 
 ## API reference
