@@ -2,9 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
+
+# A new push on the same PR cancels the run that is now out of date
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
